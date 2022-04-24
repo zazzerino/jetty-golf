@@ -19,14 +19,14 @@ class UserServiceTest {
     @BeforeAll
     static void setUp() throws IOException {
         dbConn = new DatabaseConnection();
-        dbConn.rebuildSchema();
+        dbConn.dropAndCreateSchema();
         userService = new UserService(dbConn);
     }
 
     @Test
     @Transaction
     void createAndFind() {
-        var user = userService.createUser("session0");
+        var user = userService.createUser(0L);
         log.info("user: " + user);
         assertNotNull(user);
 

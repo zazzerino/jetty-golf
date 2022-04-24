@@ -15,11 +15,11 @@ public interface UserDao {
 
     @SqlQuery("SELECT * FROM person WHERE session_id = ?")
     @RegisterRowMapper(User.Mapper.class)
-    Optional<User> findBySessionId(String sessionId);
+    Optional<User> findBySessionId(Long sessionId);
 
     @SqlUpdate("INSERT INTO person (name, session_id) VALUES (?, ?)")
     @GetGeneratedKeys("id")
-    Long create(String name, String sessionId);
+    Long create(String name, Long sessionId);
 
     @SqlUpdate("""
         UPDATE person

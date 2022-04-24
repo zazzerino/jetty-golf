@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class DatabaseConnection {
     private static final Path SCHEMA_PATH = Paths.get("src/main/resources/schema.sql");
     private static final String DB_NAME = "golf";
-    private static final String USER_NAME = "golf";
+    private static final String USER = "golf";
     private static final String PASSWORD = "golf";
     private final Jdbi jdbi;
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
@@ -25,7 +25,7 @@ public class DatabaseConnection {
         var dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[] {"localhost"});
         dataSource.setDatabaseName(DB_NAME);
-        dataSource.setUser(USER_NAME);
+        dataSource.setUser(USER);
         dataSource.setPassword(PASSWORD);
 
         jdbi = Jdbi.create(dataSource);
@@ -33,7 +33,7 @@ public class DatabaseConnection {
         jdbi.installPlugin(new SqlObjectPlugin());
     }
 
-    public void rebuildSchema() throws IOException {
+    public void dropAndCreateSchema() throws IOException {
         log.info("Rebuilding database");
         try (var lines= Files.lines(SCHEMA_PATH)) {
             var sql = lines.collect(Collectors.joining("\n"));

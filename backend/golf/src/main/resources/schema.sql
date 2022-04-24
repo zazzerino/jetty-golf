@@ -8,7 +8,7 @@ CREATE TABLE person
 (
     id         BIGSERIAL PRIMARY KEY,
     name       TEXT      NOT NULL,
-    session_id TEXT      NOT NULL
+    session_id BIGINT    NOT NULL
 );
 
 CREATE TABLE game

@@ -16,11 +16,11 @@ public class UserService {
         return userDao.findById(id);
     }
 
-    public Optional<User> findBySessionId(String sessionId) {
+    public Optional<User> findBySessionId(Long sessionId) {
         return userDao.findBySessionId(sessionId);
     }
 
-    public Optional<Long> findUserId(String sessionId) {
+    public Optional<Long> findUserId(Long sessionId) {
         return findBySessionId(sessionId)
                 .map(User::id);
     }
@@ -30,13 +30,13 @@ public class UserService {
                 .map(User::name);
     }
 
-    public Optional<String> findSessionId(Long userId) {
+    public Optional<Long> findSessionId(Long userId) {
         return findById(userId)
                 .map(User::sessionId);
     }
 
     @Transaction
-    public User createUser(String sessionId) {
+    public User createUser(Long sessionId) {
         var name = User.DEFAULT_NAME;
         var id = userDao.create(name, sessionId);
         return new User(id, name, sessionId);
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     @Transaction
-    public void deleteUser(String sessionId) {
+    public void deleteUser(Long sessionId) {
         var userId = findUserId(sessionId).orElseThrow();
         userDao.delete(userId);
     }
