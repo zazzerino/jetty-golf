@@ -8,7 +8,8 @@ import org.eclipse.jetty.websocket.server.JettyWebSocketCreator;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SocketCreator implements JettyWebSocketCreator {
+public class SocketCreator implements JettyWebSocketCreator
+{
     private final AtomicLong idGenerator = new AtomicLong(0);
     private final Sessions sessions;
     private final UserService userService;
@@ -16,7 +17,8 @@ public class SocketCreator implements JettyWebSocketCreator {
 
     public SocketCreator(Sessions sessions,
                          UserService userService,
-                         UserController userController) {
+                         UserController userController)
+    {
         this.sessions = sessions;
         this.userService = userService;
         this.userController = userController;
@@ -24,7 +26,8 @@ public class SocketCreator implements JettyWebSocketCreator {
 
     @Override
     public Object createWebSocket(JettyServerUpgradeRequest request,
-                                  JettyServerUpgradeResponse response) {
+                                  JettyServerUpgradeResponse response)
+    {
         var id = idGenerator.getAndIncrement();
         return new Socket(id, sessions, userService, userController);
     }

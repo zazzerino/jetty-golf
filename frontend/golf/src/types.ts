@@ -1,3 +1,5 @@
+import {Dispatch} from "react";
+
 export interface User {
   id: number;
   name: string;

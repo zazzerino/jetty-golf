@@ -1,9 +1,10 @@
 import {Action, AppState, User} from "./types";
 
-export const DEFAULT_NAME = "anon";
+const DEFAULT_ID = -1;
+const DEFAULT_NAME = "anon";
 
 export const DEFAULT_USER: User = {
-  id: -1,
+  id: DEFAULT_ID,
   name: DEFAULT_NAME,
 }
 

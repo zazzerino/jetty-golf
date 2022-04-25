@@ -18,7 +18,7 @@ export function Navbar(props: {user: User}) {
       </li>
       {user &&
           <p className="user-info">
-              logged in as
+              Logged in as
               <span className="user-name"> {user.name}</span>
               <span className="user-id">(id={user.id})</span>
           </p>

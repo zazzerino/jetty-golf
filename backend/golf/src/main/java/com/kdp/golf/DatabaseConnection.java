@@ -13,7 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-public class DatabaseConnection {
+public class DatabaseConnection
+{
     private static final Path SCHEMA_PATH = Paths.get("src/main/resources/schema.sql");
     private static final String DB_NAME = "golf";
     private static final String USER = "golf";
@@ -21,7 +22,8 @@ public class DatabaseConnection {
     private final Jdbi jdbi;
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
 
-    public DatabaseConnection() {
+    public DatabaseConnection()
+    {
         var dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[] {"localhost"});
         dataSource.setDatabaseName(DB_NAME);
@@ -33,15 +35,17 @@ public class DatabaseConnection {
         jdbi.installPlugin(new SqlObjectPlugin());
     }
 
-    public void dropAndCreateSchema() throws IOException {
-        log.info("Rebuilding database");
-        try (var lines= Files.lines(SCHEMA_PATH)) {
+    public void dropAndCreateSchema() throws IOException
+    {
+        log.info("dropping and recreating db tables");
+        try (var lines = Files.lines(SCHEMA_PATH)) {
             var sql = lines.collect(Collectors.joining("\n"));
             jdbi.useHandle(handle -> handle.execute(sql));
         }
     }
 
-    public Jdbi jdbi() {
+    public Jdbi jdbi()
+    {
         return jdbi;
     }
 }

@@ -8,16 +8,20 @@ import java.sql.SQLException;
 
 public record User(Long id,
                    String name,
-                   Long sessionId) {
+                   Long sessionId)
+{
     public static final String DEFAULT_NAME = "anon";
 
-    public User withName(String name) {
+    public User withName(String name)
+    {
         return new User(id, name, sessionId);
     }
 
-    public static class Mapper implements RowMapper<User> {
+    public static class Mapper implements RowMapper<User>
+    {
         @Override
-        public User map(ResultSet rs, StatementContext _ctx) throws SQLException {
+        public User map(ResultSet rs, StatementContext ctx) throws SQLException
+        {
             var id = rs.getLong("id");
             var name = rs.getString("name");
             var sessionId = rs.getLong("session_id");
@@ -25,9 +29,10 @@ public record User(Long id,
         }
     }
 
-    public record Dto(Long id, String name) {
-        public static Dto from(User user) {
-            return new Dto(user.id(), user.name());
-        }
+    public record Dto(Long id, String name) {}
+
+    public User.Dto toDto()
+    {
+        return new Dto(id, name);
     }
 }

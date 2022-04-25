@@ -8,7 +8,8 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserDao
+{
     @SqlQuery("SELECT * FROM person WHERE id = ?")
     @RegisterRowMapper(User.Mapper.class)
     Optional<User> findById(Long id);
