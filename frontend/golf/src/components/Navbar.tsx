@@ -1,6 +1,16 @@
 import {Link} from 'react-router-dom';
 import {User} from '../types';
 
+function UserInfo(props: {id: number, name: string}) {
+  return (
+    <p className="user-info">
+      Logged in as
+      <span className="user-name"> {props.name}</span>
+      <span className="user-id">(id={props.id})</span>
+    </p>
+  );
+}
+
 export function Navbar(props: {user: User}) {
   const user = props.user;
 
@@ -16,13 +26,7 @@ export function Navbar(props: {user: User}) {
           User
         </Link>
       </li>
-      {user &&
-          <p className="user-info">
-              Logged in as
-              <span className="user-name"> {user.name}</span>
-              <span className="user-id">(id={user.id})</span>
-          </p>
-      }
+      {user && <UserInfo id={user.id} name={user.name} />}
     </ul>
   );
 }

@@ -35,7 +35,7 @@ public class DatabaseConnection
         jdbi.installPlugin(new SqlObjectPlugin());
     }
 
-    public void dropAndCreateSchema() throws IOException
+    public void runSchema() throws IOException
     {
         log.info("dropping and recreating db tables");
         try (var lines = Files.lines(SCHEMA_PATH)) {

@@ -1,25 +1,26 @@
-import React, {useEffect, useReducer, useRef} from 'react';
+import React, {useContext, useEffect, useReducer} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Navbar} from "./components/Navbar";
 import {INITIAL_STATE, rootReducer} from "./reducer";
 import {HomePage} from "./components/HomePage";
 import {UserPage} from "./components/user/UserPage";
-import {SocketProvider} from "./SocketProvider";
+import {SocketContext} from "./SocketProvider";
 import {handleMessage} from "./socket";
 
-export default function App(props: {socket: WebSocket}) {
-  const socket = props.socket;
+export default function App() {
   const [state, dispatch] = useReducer(rootReducer, INITIAL_STATE);
   const user = state.user;
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
-    socket.onmessage = event => handleMessage(dispatch, event);
-  }, []);
+    if (socket) {
+      socket.onmessage = ev => handleMessage(dispatch, ev);
+    }
+  }, [socket]);
 
   return (
     <div className="App">
-      <SocketProvider socket={socket}>
         <BrowserRouter>
           <Navbar user={user} />
           <Routes>
@@ -27,7 +28,6 @@ export default function App(props: {socket: WebSocket}) {
             <Route path="/user" element={<UserPage user={user} />} />
           </Routes>
         </BrowserRouter>
-      </SocketProvider>
     </div>
   );
 }

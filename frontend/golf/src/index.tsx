@@ -4,16 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {makeSocket} from "./socket";
+import {SocketProvider} from "./SocketProvider";
+
+const socket = makeSocket();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const socket = makeSocket();
-
 root.render(
   <React.StrictMode>
-    <App socket={socket} />
+    <SocketProvider socket={socket}>
+      <App />
+    </SocketProvider>
   </React.StrictMode>
 );
 

@@ -16,7 +16,7 @@ public class App
     public static void main(String[] args) throws Exception
     {
         var dbConnection = new DatabaseConnection();
-        dbConnection.dropAndCreateSchema();
+        dbConnection.runSchema();
 
         var userService = new UserService(dbConnection);
         var userController = new UserController(userService);

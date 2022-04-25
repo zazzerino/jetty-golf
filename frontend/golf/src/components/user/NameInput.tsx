@@ -5,6 +5,7 @@ import {SocketContext} from "../../SocketProvider";
 export function NameInput() {
   const [name, setName] = useState("");
   const socket = useContext(SocketContext);
+  if (!socket) return null;
 
   return (
     <div className="NameInput">
@@ -23,6 +24,6 @@ export function NameInput() {
   );
 }
 
-function send(socket: WebSocket | null, name: string) {
-  socket && sendUpdateName(socket, name);
+function send(socket: WebSocket, name: string) {
+  if (socket) sendUpdateName(socket, name);
 }
