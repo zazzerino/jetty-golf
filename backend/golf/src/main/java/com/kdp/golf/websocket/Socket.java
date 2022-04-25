@@ -95,8 +95,8 @@ public class Socket extends WebSocketAdapter
     private static Request parseJson(Long userId, String json) throws JsonProcessingException
     {
         var jsonNode = objectMapper.readTree(json);
-        var typeVal = jsonNode.get("type").asText();
-        var requestType = Request.Type.valueOf(typeVal);
+        var typeText = jsonNode.get("type").asText();
+        var requestType = Request.Type.valueOf(typeText);
 
         switch (requestType) {
             case UPDATE_NAME -> {

@@ -14,16 +14,12 @@ export function NameInput() {
           placeholder="Type a username"
           value={name}
           onChange={ev => setName(ev.target.value)}
-          onKeyDown={ev => ev.key === "Enter" && send(socket, name)}
+          onKeyDown={ev => ev.key === "Enter" && sendUpdateName(socket, name)}
         />
-        <button onClick={() => send(socket, name)}>
+        <button onClick={() => sendUpdateName(socket, name)}>
           Send
         </button>
       </>
     </div>
   );
-}
-
-function send(socket: WebSocket, name: string) {
-  if (socket) sendUpdateName(socket, name);
 }

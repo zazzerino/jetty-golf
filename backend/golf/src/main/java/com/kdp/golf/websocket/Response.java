@@ -1,7 +1,6 @@
 package com.kdp.golf.websocket;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kdp.golf.user.User;
 
 public interface Response
 {
@@ -14,7 +13,7 @@ public interface Response
         GAME,
     }
 
-    record UserResponse(User.Dto user) implements Response
+    record User(com.kdp.golf.user.User.Dto user) implements Response
     {
         @Override
         public Type type()

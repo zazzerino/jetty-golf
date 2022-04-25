@@ -15,21 +15,26 @@ public class App
 
     public static void main(String[] args) throws Exception
     {
+        // drop and create db tables
         var dbConnection = new DatabaseConnection();
         dbConnection.runSchema();
 
+        // setup app services
+        var sessions = new Sessions();
         var userService = new UserService(dbConnection);
         var userController = new UserController(userService);
 
+        // create server and websocket servlet
         var server = new Server(PORT);
-        var handler = new ServletContextHandler(server, "/");
-        JettyWebSocketServletContainerInitializer.configure(handler, null);
-
-        var sessions = new Sessions();
         var servlet = new SocketServlet(sessions, userService, userController);
-        handler.addServlet(new ServletHolder(servlet),"/ws");
 
+        // create request handler
+        var handler = new ServletContextHandler(server, "/");
+        handler.addServlet(new ServletHolder(servlet),"/ws");
+        JettyWebSocketServletContainerInitializer.configure(handler, null);
         server.setHandler(handler);
+
+        // start server and wait for connections
         server.start();
         server.join();
     }

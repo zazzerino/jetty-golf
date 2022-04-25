@@ -13,6 +13,7 @@ export default function App() {
   const user = state.user;
   const socket = useContext(SocketContext);
 
+  // setup websocket message handler
   useEffect(() => {
     if (socket) {
       socket.onmessage = ev => handleMessage(dispatch, ev);

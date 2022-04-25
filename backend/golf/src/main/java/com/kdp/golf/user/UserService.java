@@ -51,11 +51,11 @@ public class UserService
     }
 
     @Transaction
-    public User updateName(Long userId, String name)
+    public User updateName(Long userId, String newName)
     {
         var user = userDao.findById(userId)
                 .orElseThrow()
-                .withName(name);
+                .withName(newName);
 
         userDao.update(user);
         return user;

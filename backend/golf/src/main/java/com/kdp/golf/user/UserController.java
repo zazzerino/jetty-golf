@@ -4,7 +4,7 @@ import com.kdp.golf.websocket.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserController
+public final class UserController
 {
     private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -14,24 +14,24 @@ public class UserController
         this.userService = userService;
     }
 
-    public Response.UserResponse createUser(Long sessionId)
+    public Response.User createUser(Long sessionId)
     {
         var user = userService.createUser(sessionId);
         log.info("user created: " + user);
         var userDto = user.toDto();
-        return new Response.UserResponse(userDto);
+        return new Response.User(userDto);
     }
 
-    public Response.UserResponse updateName(Long sessionId, String name)
+    public Response.User updateName(Long sessionId, String newName)
     {
         var user = userService.findBySessionId(sessionId)
                 .orElseThrow()
-                .withName(name);
+                .withName(newName);
 
-        userService.updateName(user.id(), name);
+        userService.updateName(user.id(), newName);
         log.info("user updated: " + user);
         var userDto = user.toDto();
-        return new Response.UserResponse(userDto);
+        return new Response.User(userDto);
     }
 
     public void deleteUser(Long sessionId)

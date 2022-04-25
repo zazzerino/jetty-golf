@@ -3,7 +3,7 @@ import {User} from '../types';
 
 function UserInfo(props: {id: number, name: string}) {
   return (
-    <p className="user-info">
+    <p className="UserInfo">
       Logged in as
       <span className="user-name"> {props.name}</span>
       <span className="user-id">(id={props.id})</span>

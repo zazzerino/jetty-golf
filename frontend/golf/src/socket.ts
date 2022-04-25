@@ -15,9 +15,9 @@ export function handleMessage(dispatch: Dispatch<Action>, event: MessageEvent) {
   console.log("message received ↓");
   console.log(event.data);
 
-  const response = JSON.parse(event.data) as Response;
-  switch (response.type) {
-    case "USER": return handleUserResponse(dispatch, response as UserResponse);
+  const resp = JSON.parse(event.data) as Response;
+  switch (resp.type) {
+    case "USER": return handleUserResponse(dispatch, resp as UserResponse);
   }
 }
 

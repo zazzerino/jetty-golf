@@ -10,6 +10,7 @@ import java.time.Duration;
 public class SocketServlet extends JettyWebSocketServlet
 {
     private static final Duration IDLE_TIMEOUT = Duration.ofMinutes(4);
+
     private final Sessions sessions;
     private final UserService userService;
     private final UserController userController;

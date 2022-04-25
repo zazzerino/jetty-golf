@@ -19,8 +19,9 @@ public class DatabaseConnection
     private static final String DB_NAME = "golf";
     private static final String USER = "golf";
     private static final String PASSWORD = "golf";
-    private final Jdbi jdbi;
     private static final Logger log = LoggerFactory.getLogger(DatabaseConnection.class);
+
+    private final Jdbi jdbi;
 
     public DatabaseConnection()
     {
