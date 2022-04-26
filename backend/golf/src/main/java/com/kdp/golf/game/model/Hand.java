@@ -2,10 +2,7 @@ package com.kdp.golf.game.model;
 
 import com.kdp.golf.game.model.card.Card;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Hand
 {
@@ -23,8 +20,8 @@ public class Hand
     public static Hand empty()
     {
         return new Hand(
-                Collections.emptyList(),
-                Collections.emptySet());
+                new ArrayList<>(),
+                new HashSet<>());
     }
 
     public void uncover(int index)

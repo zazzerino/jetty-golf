@@ -25,7 +25,7 @@ public class SocketCreator implements JettyWebSocketCreator
     }
 
     @Override
-    public Object createWebSocket(JettyServerUpgradeRequest request,
+    public Socket createWebSocket(JettyServerUpgradeRequest request,
                                   JettyServerUpgradeResponse response)
     {
         var id = idGenerator.getAndIncrement();

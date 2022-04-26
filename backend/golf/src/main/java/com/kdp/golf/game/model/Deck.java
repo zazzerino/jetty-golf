@@ -1,5 +1,6 @@
 package com.kdp.golf.game.model;
 
+import com.google.common.collect.Iterables;
 import com.kdp.golf.game.model.card.Card;
 import com.kdp.golf.game.model.card.Rank;
 import com.kdp.golf.game.model.card.Suit;
@@ -70,7 +71,7 @@ public class Deck
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Deck deck = (Deck) o;
-        return cards.equals(deck.cards);
+        return Iterables.elementsEqual(cards, deck.cards);
     }
 
     @Override

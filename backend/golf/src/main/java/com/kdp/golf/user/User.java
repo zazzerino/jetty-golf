@@ -29,6 +29,9 @@ public record User(Long id,
         }
     }
 
+    /**
+     * Represents the user object that will be sent to the client.
+     */
     public record Dto(Long id, String name) {}
 
     public User.Dto toDto()

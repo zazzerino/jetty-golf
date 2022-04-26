@@ -51,6 +51,13 @@ public class UserService
     }
 
     @Transaction
+    public void deleteUser(Long sessionId)
+    {
+        var userId = findUserId(sessionId).orElseThrow();
+        userDao.delete(userId);
+    }
+
+    @Transaction
     public User updateName(Long userId, String newName)
     {
         var user = userDao.findById(userId)
@@ -59,12 +66,5 @@ public class UserService
 
         userDao.update(user);
         return user;
-    }
-
-    @Transaction
-    public void deleteUser(Long sessionId)
-    {
-        var userId = findUserId(sessionId).orElseThrow();
-        userDao.delete(userId);
     }
 }

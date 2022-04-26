@@ -1,5 +1,6 @@
 package com.kdp.golf.game.model;
 
+import com.google.common.collect.Lists;
 import com.kdp.golf.Lib;
 import com.kdp.golf.game.model.card.Card;
 import com.kdp.golf.game.model.card.CardLocation;
@@ -25,8 +26,7 @@ public class Game
     {
         var deck = Deck.create(DECK_COUNT);
         var tableCards = new ArrayDeque<Card>();
-        var players = new ArrayList<>(List.of(host));
-        var hostId = host.id();
+        var players = Lists.newArrayList(host);
         var nextPlayer = 0L;
         var state = GameState.INIT;
         var turn = 0;
@@ -36,7 +36,7 @@ public class Game
                 deck,
                 tableCards,
                 players,
-                hostId,
+                host.id(),
                 nextPlayer,
                 state,
                 turn);
@@ -138,6 +138,7 @@ public class Game
 
     private void takeFromTable(Player player)
     {
+        // TODO: handle errors
         var card = tableCards.pop();
         player.holdCard(card);
         state = GameState.DISCARD;
@@ -189,10 +190,9 @@ public class Game
      */
     public List<Long> playerOrderFrom(Long playerId)
     {
-        var playerIds = new ArrayList<>(
-                players.stream()
-                        .map(Player::id)
-                        .toList());
+        var playerIds = players.stream()
+                .map(Player::id)
+                .collect(Collectors.toCollection(ArrayList::new));
 
         var index = Lib.findIndex(playerIds, playerId).orElseThrow();
         Collections.rotate(playerIds, -index);

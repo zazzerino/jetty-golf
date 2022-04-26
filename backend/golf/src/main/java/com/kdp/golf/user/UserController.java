@@ -18,8 +18,7 @@ public final class UserController
     {
         var user = userService.createUser(sessionId);
         log.info("user created: " + user);
-        var userDto = user.toDto();
-        return new Response.User(userDto);
+        return new Response.User(user.toDto());
     }
 
     public Response.User updateName(Long sessionId, String newName)
@@ -30,8 +29,7 @@ public final class UserController
 
         userService.updateName(user.id(), newName);
         log.info("user updated: " + user);
-        var userDto = user.toDto();
-        return new Response.User(userDto);
+        return new Response.User(user.toDto());
     }
 
     public void deleteUser(Long sessionId)
