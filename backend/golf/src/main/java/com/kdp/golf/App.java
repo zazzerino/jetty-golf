@@ -27,7 +27,7 @@ public class App
         // create server
         var server = new Server(PORT);
         var handler = new ServletContextHandler(server, "/");
-        var servlet = new SocketServlet(new Sessions(), userService, userController);
+        var servlet = new SocketServlet(idGenerator, new Sessions(), userService, userController);
 
         handler.addServlet(new ServletHolder(servlet),"/ws");
         JettyWebSocketServletContainerInitializer.configure(handler, null);
