@@ -18,18 +18,16 @@ public final class UserController
     {
         var user = userService.createUser(sessionId);
         log.info("user created: " + user);
-        return new Response.User(user.toDto());
+        var userDto = UserDto.from(user);
+        return new Response.User(userDto);
     }
 
     public Response.User updateName(Long sessionId, String newName)
     {
-        var user = userService.findBySessionId(sessionId)
-                .orElseThrow()
-                .withName(newName);
-
-        userService.updateName(user.id(), newName);
+        var user = userService.updateName(sessionId, newName);
         log.info("user updated: " + user);
-        return new Response.User(user.toDto());
+        var userDto = UserDto.from(user);
+        return new Response.User(userDto);
     }
 
     public void deleteUser(Long sessionId)

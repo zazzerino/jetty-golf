@@ -20,14 +20,15 @@ public class App
         dbConnection.runSchema();
 
         // setup services
-        var sessions = new Sessions();
-        var userService = new UserService(dbConnection);
+        var idGenerator = new IdGenerator(0);
+        var userService = new UserService(dbConnection, idGenerator);
         var userController = new UserController(userService);
 
         // create server
         var server = new Server(PORT);
         var handler = new ServletContextHandler(server, "/");
-        var servlet = new SocketServlet(sessions, userService, userController);
+        var servlet = new SocketServlet(new Sessions(), userService, userController);
+
         handler.addServlet(new ServletHolder(servlet),"/ws");
         JettyWebSocketServletContainerInitializer.configure(handler, null);
         server.setHandler(handler);

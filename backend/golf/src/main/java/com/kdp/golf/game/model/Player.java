@@ -29,7 +29,7 @@ public class Player
 
     public static Player from(User u)
     {
-        return Player.create(u.id(), u.name());
+        return create(u.id(), u.name());
     }
 
     public void giveCard(Card card)
@@ -69,6 +69,11 @@ public class Player
     public boolean stillUncoveringTwo()
     {
         return uncoveredCardCount() < 2;
+    }
+
+    public int handSize()
+    {
+        return hand.cards().size();
     }
 
     public Long id()

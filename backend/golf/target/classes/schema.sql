@@ -6,21 +6,22 @@ DROP TABLE IF EXISTS person;
 -- The name 'person' is used because 'user' would conflict with a builtin postgres table.
 CREATE TABLE person
 (
-    id         BIGSERIAL PRIMARY KEY,
-    name       TEXT      NOT NULL,
-    session_id BIGINT    NOT NULL
+    id      BIGINT PRIMARY KEY NOT NULL,
+    name    TEXT   NOT NULL,
+    session BIGINT NOT NULL
 );
 
 CREATE TABLE game
 (
-    id          BIGSERIAL PRIMARY KEY,
-    host        BIGINT    NOT NULL,
-    state       TEXT      NOT NULL,
-    turn        INT       NOT NULL,
-    final_turn  BOOLEAN   NOT NULL,
-    deck        TEXT[]    NOT NULL,
-    table_cards TEXT[]    NOT NULL,
-    players     BIGINT[]  NOT NULL
+    id          BIGINT   PRIMARY KEY NOT NULL,
+    deck        TEXT[]   NOT NULL,
+    table_cards TEXT[]   NOT NULL,
+    players     BIGINT[] NOT NULL,
+    host        BIGINT   NOT NULL,
+    state       TEXT     NOT NULL,
+    turn        INT      NOT NULL,
+    next_player BIGINT   NOT NULL,
+    final_turn  BOOLEAN  NOT NULL
 );
 
 CREATE TABLE player

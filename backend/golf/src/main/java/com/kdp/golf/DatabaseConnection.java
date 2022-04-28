@@ -38,7 +38,7 @@ public class DatabaseConnection
 
     public void runSchema() throws IOException
     {
-        log.info("dropping and recreating db tables");
+        log.info("running schema");
         try (var lines = Files.lines(SCHEMA_PATH)) {
             var sql = lines.collect(Collectors.joining("\n"));
             jdbi.useHandle(handle -> handle.execute(sql));

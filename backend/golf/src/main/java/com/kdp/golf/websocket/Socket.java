@@ -86,6 +86,14 @@ public class Socket extends WebSocketAdapter
         session.getRemote().sendString(json);
     }
 
+    private static void trySendResponse(Session session, Response response) {
+        try {
+            sendResponse(session, response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Optional<Long> findUserId(Session session)
     {
         var sessionId = sessions.getSessionId(session);
@@ -104,14 +112,6 @@ public class Socket extends WebSocketAdapter
                 return new Request.UpdateName(userId, name);
             }
             default -> throw new IllegalStateException("Unexpected value: " + requestType);
-        }
-    }
-
-    private static void trySendResponse(Session session, Response response) {
-        try {
-            sendResponse(session, response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

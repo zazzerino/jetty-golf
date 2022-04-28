@@ -1,5 +1,6 @@
 package com.kdp.golf.game.model;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.kdp.golf.Lib;
 import com.kdp.golf.game.model.card.Card;
@@ -15,9 +16,10 @@ public class Game
     private final Deque<Card> tableCards;
     private final List<Player> players;
     private Long hostId;
-    private Long playerTurn; // index of player in `players`, NOT the player id
     private GameState state;
     private int turn;
+    private Long nextPlayerId;
+    private boolean isFinalTurn;
 
     public static final int DECK_COUNT = 2;
     public static final int MAX_PLAYERS = 4;
@@ -27,19 +29,12 @@ public class Game
         var deck = Deck.create(DECK_COUNT);
         var tableCards = new ArrayDeque<Card>();
         var players = Lists.newArrayList(host);
-        var nextPlayer = 0L;
         var state = GameState.INIT;
         var turn = 0;
+        var nextPlayerId = host.id();
+        var isFinalTurn = false;
 
-        return new Game(
-                id,
-                deck,
-                tableCards,
-                players,
-                host.id(),
-                nextPlayer,
-                state,
-                turn);
+        return new Game(id, deck, tableCards, players, host.id(), state, turn, nextPlayerId, isFinalTurn);
     }
 
     public Game(Long id,
@@ -47,39 +42,40 @@ public class Game
                 Deque<Card> tableCards,
                 List<Player> players,
                 Long hostId,
-                Long playerTurn,
                 GameState state,
-                int turn)
+                int turn,
+                Long nextPlayerId,
+                boolean isFinalTurn)
     {
         this.id = id;
         this.deck = deck;
         this.tableCards = tableCards;
         this.players = players;
         this.hostId = hostId;
-        this.playerTurn = playerTurn;
         this.state = state;
         this.turn = turn;
+        this.nextPlayerId = nextPlayerId;
+        this.isFinalTurn = isFinalTurn;
     }
 
-    public void addPlayer(Player player)
+    public void addPlayer(Player p)
     {
         if (players.size() >= MAX_PLAYERS) {
-            throw new IllegalStateException("attempt to add more than MAX_PLAYERS");
+            throw new IllegalStateException("can't add more than MAX_PLAYERS");
         }
 
-        players.add(player);
+        players.add(p);
     }
 
-    public void removePlayer(Player player)
+    public void removePlayer(Player p)
     {
-        players.remove(player);
-        var playerId = player.id();
+        players.remove(p);
 
-        if (hostId.equals(playerId)) {
+        if (hostId.equals(p.id())) {
             hostId = players.stream().findFirst().orElseThrow().id();
         }
 
-        if (playerTurn.equals(playerId)) {
+        if (nextPlayerId.equals(p.id())) {
             nextPlayer();
         }
     }
@@ -108,10 +104,21 @@ public class Game
         tableCards.push(card);
     }
 
-    private void uncoverTwo(Player player, int handIndex)
+    public void handleEvent(GameEvent event)
     {
-        if (player.stillUncoveringTwo()) {
-            player.uncoverCard(handIndex);
+    }
+
+    private Optional<Player> getPlayer(Long playerId)
+    {
+        return players.stream()
+                .filter(p -> p.id().equals(playerId))
+                .findFirst();
+    }
+
+    private void uncoverTwo(Player p, int handIndex)
+    {
+        if (p.stillUncoveringTwo()) {
+            p.uncoverCard(handIndex);
         } else return;
 
         var allReady = players.stream().noneMatch(Player::stillUncoveringTwo);
@@ -121,35 +128,35 @@ public class Game
         }
     }
 
-    private void uncover(Player player, int handIndex)
+    private void uncover(Player p, int handIndex)
     {
-        player.uncoverCard(handIndex);
+        p.uncoverCard(handIndex);
         state = GameState.TAKE;
         ++turn;
         nextPlayer();
     }
 
-    private void takeFromDeck(Player player)
+    private void takeFromDeck(Player p)
     {
         var card = deck.deal().orElseThrow();
-        player.holdCard(card);
+        p.holdCard(card);
         state = GameState.DISCARD;
     }
 
-    private void takeFromTable(Player player)
+    private void takeFromTable(Player p)
     {
-        // TODO: handle errors
+        // TODO: handle an empty stack
         var card = tableCards.pop();
-        player.holdCard(card);
+        p.holdCard(card);
         state = GameState.DISCARD;
     }
 
-    private void discard(Player player)
+    private void discard(Player p)
     {
-        var card = player.discard();
+        var card = p.discard();
         tableCards.push(card);
 
-        var hasOneCoveredCard = player.uncoveredCardCount() == Hand.HAND_SIZE - 1;
+        var hasOneCoveredCard = p.uncoveredCardCount() == Hand.HAND_SIZE - 1;
         if (hasOneCoveredCard) {
             state = GameState.TAKE;
             ++turn;
@@ -158,31 +165,28 @@ public class Game
         }
     }
 
-    private void swapCard(Player player, int handIndex)
+    private void swapCard(Player p, int handIndex)
     {
-        var card = player.swapCard(handIndex);
+        var card = p.swapCard(handIndex);
         tableCards.push(card);
         ++turn;
         nextPlayer();
     }
 
-    private boolean playerCanAct(Player player)
+    private boolean playerCanAct(Player p)
     {
-        var isPlayersTurn = playerTurn.equals(player.id());
-        // When the state is UNCOVER_TWO, any player can act.
-        var isUncoverTwo = state == GameState.UNCOVER_TWO && player.stillUncoveringTwo();
+        var isPlayersTurn = nextPlayerId.equals(p.id());
+        // When the state is UNCOVER_TWO any player can act as long as they have fewer than 2 cards uncovered
+        var isUncoverTwo = state == GameState.UNCOVER_TWO && p.stillUncoveringTwo();
         return isPlayersTurn || isUncoverTwo;
     }
 
     private void nextPlayer()
     {
-        var player = players.stream()
-                .filter(p -> playerTurn.equals(p.id()))
-                .findFirst()
-                .orElseThrow();
-
+        var player = getPlayer(nextPlayerId).orElseThrow();
         var index = Lib.findIndex(players, player).orElseThrow();
-        playerTurn = (index + 1L) % players.size();
+        var nextIndex = (index + 1) % players.size();
+        nextPlayerId = players.get(nextIndex).id();
     }
 
     /**
@@ -202,8 +206,8 @@ public class Game
     /**
      * @return the card locations that `player` can interact with
      */
-    public List<CardLocation> playableCards(Player player) {
-        if (!playerCanAct(player)) return Collections.emptyList();
+    public List<CardLocation> playableCards(Player p) {
+        if (!playerCanAct(p)) return Collections.emptyList();
 
         return switch (state) {
             case UNCOVER_TWO, UNCOVER -> CardLocation.UNCOVER_LOCATIONS;
@@ -213,25 +217,72 @@ public class Game
         };
     }
 
+    public Long id()
+    {
+        return id;
+    }
+
+    public Deck deck()
+    {
+        return deck;
+    }
+
+    public Deque<Card> tableCards()
+    {
+        return tableCards;
+    }
+
+    public List<Player> players()
+    {
+        return players;
+    }
+
+    public Long hostId()
+    {
+        return hostId;
+    }
+
+    public GameState state()
+    {
+        return state;
+    }
+
+    public int turn()
+    {
+        return turn;
+    }
+
+    public Long nextPlayerId()
+    {
+        return nextPlayerId;
+    }
+
+    public boolean isFinalTurn()
+    {
+        return isFinalTurn;
+    }
+
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Game game = (Game) o;
-        return turn == game.turn
-                && id.equals(game.id)
-                && deck.equals(game.deck)
-                && tableCards.equals(game.tableCards)
-                && players.equals(game.players)
-                && hostId.equals(game.hostId)
-                && state == game.state;
+        Game g = (Game) o;
+        return turn == g.turn
+                && isFinalTurn == g.isFinalTurn
+                && id.equals(g.id)
+                && deck.equals(g.deck)
+                && Iterables.elementsEqual(tableCards, g.tableCards)
+                && players.equals(g.players)
+                && hostId.equals(g.hostId)
+                && state == g.state
+                && nextPlayerId.equals(g.nextPlayerId);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, deck, tableCards, players, hostId, playerTurn, state, turn);
+        return Objects.hash(id, deck, tableCards, players, hostId, state, turn, nextPlayerId, isFinalTurn);
     }
 
     @Override
@@ -243,43 +294,10 @@ public class Game
                 ", tableCards=" + tableCards +
                 ", players=" + players +
                 ", hostId=" + hostId +
-                ", playerTurn=" + playerTurn +
                 ", state=" + state +
                 ", turn=" + turn +
+                ", nextPlayerId=" + nextPlayerId +
+                ", isFinalTurn=" + isFinalTurn +
                 '}';
     }
 }
-
-//        var builder = new Builder();
-//        builder.id = id;
-//        builder.deck = Deck.create(DECK_COUNT);
-//        builder.tableCards = new ArrayDeque<>();
-//        builder.hostId = host.id();
-//        builder.state = GameState.INIT;
-//        builder.turn = 0;
-//        builder.players = new ArrayList<Player>();
-//        builder.players.add(host);
-//        return builder.build();
-
-//    public static class Builder
-//    {
-//        public Long id;
-//        public Deck deck;
-//        public Deque<Card> tableCards;
-//        public List<Player> players;
-//        public Long hostId;
-//        public GameState state;
-//        public Integer turn;
-//
-//        public Game build()
-//        {
-//            Objects.requireNonNull(id);
-//            Objects.requireNonNull(deck);
-//            Objects.requireNonNull(tableCards);
-//            Objects.requireNonNull(players);
-//            Objects.requireNonNull(hostId);
-//            Objects.requireNonNull(state);
-//            Objects.requireNonNull(turn);
-//            return new Game(id, deck, tableCards, players, hostId, state, turn);
-//        }
-//    }

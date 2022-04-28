@@ -1,7 +1,7 @@
 package com.kdp.golf.user;
 
 import com.kdp.golf.DatabaseConnection;
-import org.jdbi.v3.sqlobject.transaction.Transaction;
+import com.kdp.golf.IdGenerator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -21,34 +21,32 @@ class UserServiceTest
     static void setUp() throws IOException
     {
         dbConn = new DatabaseConnection();
-//        dbConn.runSchema();
-        userService = new UserService(dbConn);
+        dbConn.runSchema();
+        userService = new UserService(dbConn, new IdGenerator(0));
     }
 
     @Test
-    @Transaction
     void createAndFind()
     {
         var user = userService.createUser(0L);
         assertNotNull(user);
         log.info("user: " + user);
 
-//        var foundById = userService.findById(user.id()).orElseThrow();
-//        assertEquals(user, foundById);
-//
-//        var foundBySessionId = userService.findBySessionId(user.sessionId()).orElseThrow();
-//        assertEquals(user, foundBySessionId);
+        var foundById = userService.findById(user.id()).orElseThrow();
+        assertEquals(user, foundById);
+
+        var foundBySessionId = userService.findBySessionId(user.sessionId()).orElseThrow();
+        assertEquals(user, foundBySessionId);
     }
 
-//    @Test
-////    @TestTransaction
-//    void updateName()
-//    {
-//        var user = userService.createUser(1234L);
-//        var user2 = userService.updateName(user.id(), "Brian Goetz");
-//
-//        var found = userService.findById(user.id()).orElseThrow();
-//        assertEquals("Brian Goetz", found.name());
-//        assertEquals(user2, found);
-//    }
+    @Test
+    void updateName()
+    {
+        var user = userService.createUser(1234L);
+        var user2 = userService.updateName(user.sessionId(), "Brian Goetz");
+
+        var found = userService.findById(user.id()).orElseThrow();
+        assertEquals("Brian Goetz", found.name());
+        assertEquals(user2, found);
+    }
 }

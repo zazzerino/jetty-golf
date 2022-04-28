@@ -1,6 +1,5 @@
 package com.kdp.golf.game.db;
 
-import com.kdp.golf.Lib;
 import com.kdp.golf.game.model.Hand;
 import com.kdp.golf.game.model.Player;
 import com.kdp.golf.game.model.card.Card;

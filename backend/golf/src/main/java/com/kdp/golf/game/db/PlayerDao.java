@@ -25,13 +25,13 @@ public interface PlayerDao
         INSERT INTO player
         (game, person, cards, uncovered, held_card)
         VALUES
-        (:game, :user, :cards, :uncovered, :heldCard)""")
+        (:game, :person, :cards, :uncovered, :heldCard)""")
     void create(@BindMethods PlayerRow playerRow);
 
     @SqlUpdate("""
         UPDATE player
         SET cards = :cards, uncovered = :uncovered, held_card = :heldCard
-        WHERE game = :game AND person = :user""")
+        WHERE game = :game AND person = :person""")
     void update(@BindMethods PlayerRow playerRow);
 
     @SqlUpdate("DELETE FROM player WHERE person = ?")
