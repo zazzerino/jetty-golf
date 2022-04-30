@@ -19,9 +19,9 @@ public class Hand
 
     public static Hand empty()
     {
-        return new Hand(
-                new ArrayList<>(),
-                new HashSet<>());
+        var cards = new ArrayList<Card>();
+        var uncovered = new HashSet<Integer>();
+        return new Hand(cards, uncovered);
     }
 
     public void uncover(int index)

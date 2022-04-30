@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents a row in the `person` table.
+ * A row in the `person` table.
  */
 public record UserRow(Long id,
                       String name,

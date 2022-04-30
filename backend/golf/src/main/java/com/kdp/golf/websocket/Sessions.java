@@ -9,23 +9,23 @@ public class Sessions
 {
     private final BiMap<Long, Session> sessions = Maps.synchronizedBiMap(HashBiMap.create());
 
-    public void add(Long id, Session session)
+    public void add(Long sessionId, Session session)
     {
         synchronized (sessions) {
-            sessions.put(id, session);
+            sessions.put(sessionId, session);
         }
     }
 
-    public void remove(Long id)
+    public void remove(Long sessionId)
     {
         synchronized (sessions) {
-            sessions.remove(id);
+            sessions.remove(sessionId);
         }
     }
 
-    public Session getSession(Long id)
+    public Session getSession(Long sessionId)
     {
-        return sessions.get(id);
+        return sessions.get(sessionId);
     }
 
     public Long getSessionId(Session session)

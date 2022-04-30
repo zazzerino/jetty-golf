@@ -12,11 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * A row in the `game` table.
+ */
 public record GameRow(Long id,
                       List<String> deck,
                       List<String> tableCards,
@@ -58,21 +59,16 @@ public record GameRow(Long id,
 
     public Game toGame(List<Player> players) {
         var state = GameState.valueOf(state());
+
         var deckCards = deck.stream()
                 .map(Card::from)
                 .collect(Collectors.toCollection(ArrayDeque::new));
 
         var deck = new Deck(deckCards);
+
         var tableCards = tableCards().stream()
                 .map(Card::from)
                 .collect(Collectors.toCollection(ArrayDeque::new));
-
-        var playerMap = players.stream()
-                .collect(Collectors.toMap(
-                        Player::id,
-                        Function.identity(),
-                        (prev, next) -> next,
-                        LinkedHashMap::new));
 
         return new Game(id, deck, tableCards, players, host, state, turn, nextPlayer, finalTurn);
     }

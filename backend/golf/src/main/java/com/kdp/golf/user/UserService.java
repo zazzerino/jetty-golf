@@ -52,7 +52,7 @@ public class UserService
     @Transaction
     public User createUser(Long sessionId)
     {
-        var id = idGen.generate();
+        var id = idGen.nextId();
         var name = User.DEFAULT_NAME;
         var user = new User(id, name, sessionId);
         var userRow = UserRow.from(user);

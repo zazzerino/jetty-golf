@@ -1,5 +1,7 @@
 package com.kdp.golf;
 
+import com.kdp.golf.game.GameService;
+import com.kdp.golf.game.db.GameRepository;
 import com.kdp.golf.user.UserController;
 import com.kdp.golf.user.UserService;
 import com.kdp.golf.websocket.Sessions;
@@ -15,20 +17,25 @@ public class App
 
     public static void main(String[] args) throws Exception
     {
-        // setup database
+        // connect to database and init tables
         var dbConnection = new DatabaseConnection();
         dbConnection.runSchema();
 
-        // setup services
-        var idGenerator = new IdGenerator(0);
+        // setup services and controllers
+        var idGenerator = new IdGenerator();
+
         var userService = new UserService(dbConnection, idGenerator);
         var userController = new UserController(userService);
 
-        // create server
+        var gameRepository = new GameRepository(dbConnection);
+        var gameService = new GameService(idGenerator, userService, gameRepository);
+
+        // create jetty server
         var server = new Server(PORT);
-        var handler = new ServletContextHandler(server, "/");
         var servlet = new SocketServlet(idGenerator, new Sessions(), userService, userController);
 
+        // create jetty handler
+        var handler = new ServletContextHandler(server, "/");
         handler.addServlet(new ServletHolder(servlet),"/ws");
         JettyWebSocketServletContainerInitializer.configure(handler, null);
         server.setHandler(handler);

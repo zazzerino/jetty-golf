@@ -29,7 +29,7 @@ public class SocketCreator implements JettyWebSocketCreator
     public Socket createWebSocket(JettyServerUpgradeRequest request,
                                   JettyServerUpgradeResponse response)
     {
-        var id = idGen.generate();
+        var id = idGen.nextId();
         return new Socket(id, sessions, userService, userController);
     }
 }

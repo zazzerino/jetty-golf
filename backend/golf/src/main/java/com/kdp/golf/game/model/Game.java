@@ -108,7 +108,7 @@ public class Game
     {
     }
 
-    private Optional<Player> getPlayer(Long playerId)
+    public Optional<Player> getPlayer(Long playerId)
     {
         return players.stream()
                 .filter(p -> p.id().equals(playerId))
@@ -206,7 +206,8 @@ public class Game
     /**
      * @return the card locations that `player` can interact with
      */
-    public List<CardLocation> playableCards(Player p) {
+    public List<CardLocation> playableCards(Player p)
+    {
         if (!playerCanAct(p)) return Collections.emptyList();
 
         return switch (state) {
@@ -289,7 +290,7 @@ public class Game
     public String toString()
     {
         return "Game{" +
-                "id=" + id +
+                "gameId=" + id +
                 ", deck=" + deck +
                 ", tableCards=" + tableCards +
                 ", players=" + players +

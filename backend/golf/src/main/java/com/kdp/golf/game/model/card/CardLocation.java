@@ -2,6 +2,9 @@ package com.kdp.golf.game.model.card;
 
 import java.util.List;
 
+/**
+ * The places a card can be.
+ */
 public enum CardLocation
 {
     DECK,

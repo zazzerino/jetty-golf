@@ -118,7 +118,7 @@ public class Player
     public String toString()
     {
         return "Player{" +
-                "id=" + id +
+                "gameId=" + id +
                 ", name='" + name + '\'' +
                 ", hand=" + hand +
                 ", heldCard=" + heldCard +

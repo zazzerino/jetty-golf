@@ -2,7 +2,6 @@ package com.kdp.golf.game.db;
 
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -16,10 +15,9 @@ public interface GameDao
 
     @SqlUpdate("""
     INSERT INTO game
-    (deck, table_cards, players, host, state, turn, next_player, final_turn)
-    VALUES (:deck, :tableCards, :players, :host, :state, :turn, :nextPlayer, :finalTurn)""")
-    @GetGeneratedKeys("id")
-    Long create(@BindMethods GameRow gameRow);
+    (id, deck, table_cards, players, host, state, turn, next_player, final_turn)
+    VALUES (:id, :deck, :tableCards, :players, :host, :state, :turn, :nextPlayer, :finalTurn)""")
+    void create(@BindMethods GameRow g);
 
     @SqlUpdate("""
     UPDATE game
@@ -27,7 +25,7 @@ public interface GameDao
     deck = :deck, table_cards = :tableCards, players = :players, host = :host,
     state = :state, turn = :turn, next_player = :nextPlayer, final_turn = :finalTurn
     WHERE id = :id""")
-    void update(@BindMethods GameRow gameRow);
+    void update(@BindMethods GameRow g);
 
     @SqlUpdate("DELETE FROM game WHERE id = ?")
     void delete(Long id);

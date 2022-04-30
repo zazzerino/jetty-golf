@@ -8,6 +8,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * An interface for doing crud with PlayerRow objects.
+ */
 public interface PlayerDao
 {
     @SqlQuery("SELECT * FROM player WHERE person = ?")

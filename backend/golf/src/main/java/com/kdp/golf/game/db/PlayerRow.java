@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Represents a row in the `player` table.
+ * A row in the `player` table.
  */
 public record PlayerRow(Long game,
                         Long person,

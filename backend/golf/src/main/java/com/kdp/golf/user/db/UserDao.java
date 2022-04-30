@@ -7,6 +7,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.Optional;
 
+/**
+ * Crud operations for UserRow objects.
+ */
 public interface UserDao
 {
     @SqlQuery("SELECT * FROM person WHERE id = ?")
@@ -16,6 +19,9 @@ public interface UserDao
     @SqlQuery("SELECT * FROM person WHERE session = ?")
     @RegisterRowMapper(UserRow.Mapper.class)
     Optional<UserRow> findBySessionId(Long sessionId);
+
+    @SqlQuery("SELECT p.name FROM person p WHERE p.id = ?")
+    Optional<String> findName(Long playerId);
 
     @SqlUpdate("""
     INSERT INTO person (id, name, session)

@@ -28,6 +28,9 @@ public class Deck
         return new Deck(cards);
     }
 
+    /**
+     * Returns a collection of every card (every combination of rank and suit).
+     */
     private static Collection<Card> enumerateCards()
     {
         var cards = new ArrayDeque<Card>();

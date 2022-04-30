@@ -6,12 +6,17 @@ public class IdGenerator
 {
     private final AtomicLong nextId;
 
+    public IdGenerator()
+    {
+        nextId = new AtomicLong(0);
+    }
+
     public IdGenerator(long startVal)
     {
         nextId = new AtomicLong(startVal);
     }
 
-    public long generate()
+    public long nextId()
     {
         return nextId.getAndIncrement();
     }

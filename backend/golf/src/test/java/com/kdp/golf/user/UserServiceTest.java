@@ -22,7 +22,7 @@ class UserServiceTest
     {
         dbConn = new DatabaseConnection();
         dbConn.runSchema();
-        userService = new UserService(dbConn, new IdGenerator(0));
+        userService = new UserService(dbConn, new IdGenerator());
     }
 
     @Test

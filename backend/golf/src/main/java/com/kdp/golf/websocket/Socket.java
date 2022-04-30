@@ -2,6 +2,7 @@ package com.kdp.golf.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kdp.golf.game.GameController;
 import com.kdp.golf.user.UserController;
 import com.kdp.golf.user.UserService;
 import org.eclipse.jetty.websocket.api.Session;
@@ -18,6 +19,7 @@ public class Socket extends WebSocketAdapter
     private final Sessions sessions;
     private final UserService userService;
     private final UserController userController;
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(Socket.class);
 
@@ -35,18 +37,18 @@ public class Socket extends WebSocketAdapter
     @Override
     public void onWebSocketConnect(Session session)
     {
-        super.onWebSocketConnect(session);
+        super.onWebSocketConnect(session); // saves this socket's session and remote
         log.info("session connected: " + session);
         sessions.add(id, session);
 
-        var response = userController.createUser(id);
+        var request = new Request.CreateUser(id);
+        var response = userController.createUser(request);
         trySendResponse(session, response);
     }
 
     @Override
     public void onWebSocketClose(int statusCode, String reason)
     {
-        super.onWebSocketClose(statusCode, reason);
         log.info("session closed: " + getSession());
         sessions.remove(id);
         userController.deleteUser(id);
@@ -55,28 +57,26 @@ public class Socket extends WebSocketAdapter
     @Override
     public void onWebSocketText(String message)
     {
-        super.onWebSocketText(message);
         log.info("message received: " + message);
         var session = getSession();
-        var userId = findUserId(session).orElseThrow();
+        var userId = userService.findBySessionId(id).orElseThrow().id();
         var request = tryParseJson(userId, message);
 
         switch (request) {
-            case Request.UpdateName r -> handleUpdateName(session, r);
+            case Request.UpdateName u -> handleUpdateName(session, u);
             default -> throw new IllegalStateException("Unexpected value: " + request);
         }
     }
 
-    private void handleUpdateName(Session session, Request.UpdateName request)
+    private void handleUpdateName(Session session, Request.UpdateName req)
     {
-        var response = userController.updateName(id, request.name());
+        var response = userController.updateName(req);
         trySendResponse(session, response);
     }
 
     @Override
     public void onWebSocketError(Throwable cause)
     {
-        super.onWebSocketError(cause);
         log.error("websocket error: " + cause);
     }
 
