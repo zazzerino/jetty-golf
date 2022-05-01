@@ -1,7 +1,7 @@
 package com.kdp.golf.user;
 
 /**
- * The user data that will be sent to the client.
+ * A user data-transfer-object for sending user data to the client.
  */
 public record UserDto(Long id, String name)
 {

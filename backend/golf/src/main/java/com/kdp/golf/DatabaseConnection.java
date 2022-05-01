@@ -38,7 +38,7 @@ public class DatabaseConnection
 
     public void runSchema() throws IOException
     {
-        log.info("running schema");
+        log.info("running resources/schema.sql");
         try (var lines = Files.lines(SCHEMA_PATH)) {
             var sql = lines.collect(Collectors.joining("\n"));
             jdbi.useHandle(handle -> handle.execute(sql));

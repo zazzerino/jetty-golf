@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kdp.golf.game.dto.GameDto;
 import com.kdp.golf.user.UserDto;
 
+/**
+ * An outgoing websocket message.
+ */
 public interface Response
 {
     @JsonProperty

@@ -1,5 +1,8 @@
 package com.kdp.golf.websocket;
 
+/**
+ * An incoming websocket message.
+ */
 public interface Request
 {
     Type type();

@@ -7,6 +7,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.Optional;
 
+/**
+ * A GameRow data access object.
+ */
 public interface GameDao
 {
     @SqlQuery("SELECT * FROM game WHERE id = ?")

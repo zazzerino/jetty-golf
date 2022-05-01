@@ -2,6 +2,7 @@ package com.kdp.golf.user.db;
 
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -24,9 +25,10 @@ public interface UserDao
     Optional<String> findName(Long playerId);
 
     @SqlUpdate("""
-    INSERT INTO person (id, name, session)
-    VALUES (:id, :name, :session)""")
-    void create(@BindMethods UserRow u);
+    INSERT INTO person (name, session)
+    VALUES (:name, :session)""")
+    @GetGeneratedKeys
+    Long create(@BindMethods UserRow u);
 
     @SqlUpdate("""
         UPDATE person

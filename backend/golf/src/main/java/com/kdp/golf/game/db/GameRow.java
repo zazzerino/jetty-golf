@@ -60,11 +60,9 @@ public record GameRow(Long id,
     public Game toGame(List<Player> players) {
         var state = GameState.valueOf(state());
 
-        var deckCards = deck.stream()
+        var deck = new Deck(this.deck.stream()
                 .map(Card::from)
-                .collect(Collectors.toCollection(ArrayDeque::new));
-
-        var deck = new Deck(deckCards);
+                .collect(Collectors.toCollection(ArrayDeque::new)));
 
         var tableCards = tableCards().stream()
                 .map(Card::from)

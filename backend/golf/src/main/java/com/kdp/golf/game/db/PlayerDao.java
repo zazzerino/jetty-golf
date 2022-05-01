@@ -24,6 +24,11 @@ public interface PlayerDao
     @RegisterRowMapper(PlayerRow.Mapper.class)
     List<PlayerRow> findPlayers(Long gameId);
 
+    @SqlQuery("""
+    SELECT p.name FROM person p
+    WHERE p.id = ?""")
+    Optional<String> findName(Long playerId);
+
     @SqlUpdate("""
         INSERT INTO player
         (game, person, cards, uncovered, held_card)

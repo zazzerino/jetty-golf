@@ -26,7 +26,7 @@ export default function App() {
           <Navbar user={user} />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/user" element={<UserPage user={user} />} />
+            <Route path="/user" element={<UserPage />} />
           </Routes>
         </BrowserRouter>
     </div>
