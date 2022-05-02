@@ -1,6 +1,7 @@
 package com.kdp.golf.game.db;
 
 import com.kdp.golf.DatabaseConnection;
+import com.kdp.golf.user.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameDaoTest
 {
     static DatabaseConnection dbConn;
+    static UserService userService;
     static GameDao gameDao;
     static Logger log = LoggerFactory.getLogger(GameDaoTest.class);
 
@@ -22,15 +24,16 @@ class GameDaoTest
     {
         dbConn = new DatabaseConnection();
         dbConn.runSchema();
+        userService = new UserService(dbConn);
         gameDao = dbConn.jdbi().onDemand(GameDao.class);
     }
 
     @Test
     void create()
     {
-        var gameRow = new GameRow(
-                0L, List.of(), List.of(), List.of(), 0L, "INIT", 0, 0L, false);
-        log.info(gameRow.toString());
-        gameDao.create(gameRow);
+//        var gameRow = new GameRow(
+//                0L, List.of(), List.of(), List.of(), 0L, "INIT", 0, 0L, false);
+//        log.info(gameRow.toString());
+//        gameDao.create(gameRow);
     }
 }

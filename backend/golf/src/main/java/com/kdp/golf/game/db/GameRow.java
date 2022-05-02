@@ -44,14 +44,13 @@ public record GameRow(Long id,
                 .map(Player::id)
                 .toList();
 
-        var state = g.state().toString();
         return new GameRow(
                 g.id(),
                 deck,
                 tableCards,
                 players,
                 g.hostId(),
-                state,
+                g.state().toString(),
                 g.turn(),
                 g.nextPlayerId(),
                 g.isFinalTurn());

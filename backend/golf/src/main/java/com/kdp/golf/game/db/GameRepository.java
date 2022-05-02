@@ -42,10 +42,10 @@ public class GameRepository
 
         var player = g.players().get(0);
         var playerRow = PlayerRow.from(g.id(), player);
-        playerDao.create(playerRow);
+        playerDao.insert(playerRow);
 
         var gameRow = GameRow.from(g);
-        gameDao.create(gameRow);
+        gameDao.insert(gameRow);
     }
 
     public void update(Game g)

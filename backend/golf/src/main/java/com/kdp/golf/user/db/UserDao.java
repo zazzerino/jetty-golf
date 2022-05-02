@@ -28,7 +28,7 @@ public interface UserDao
     INSERT INTO person (name, session)
     VALUES (:name, :session)""")
     @GetGeneratedKeys
-    Long create(@BindMethods UserRow u);
+    Long insert(@BindMethods UserRow u);
 
     @SqlUpdate("""
         UPDATE person

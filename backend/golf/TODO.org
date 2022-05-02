@@ -1,0 +1,2 @@
+* implement actual http user auth
+* write README

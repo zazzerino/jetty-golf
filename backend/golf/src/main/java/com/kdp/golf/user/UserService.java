@@ -51,7 +51,7 @@ public class UserService
     {
         var name = User.DEFAULT_NAME;
         var userRow = new UserRow(null, name, sessionId);
-        var id = userDao.create(userRow);
+        var id = userDao.insert(userRow);
         return new User(id, name, sessionId);
     }
 

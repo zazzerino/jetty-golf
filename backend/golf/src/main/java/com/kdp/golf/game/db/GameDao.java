@@ -2,6 +2,7 @@ package com.kdp.golf.game.db;
 
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -18,9 +19,10 @@ public interface GameDao
 
     @SqlUpdate("""
     INSERT INTO game
-    (id, deck, table_cards, players, host, state, turn, next_player, final_turn)
-    VALUES (:id, :deck, :tableCards, :players, :host, :state, :turn, :nextPlayer, :finalTurn)""")
-    void create(@BindMethods GameRow g);
+    (deck, table_cards, players, host, state, turn, next_player, final_turn)
+    VALUES (:deck, :tableCards, :players, :host, :state, :turn, :nextPlayer, :finalTurn)""")
+    @GetGeneratedKeys
+    Long insert(@BindMethods GameRow g);
 
     @SqlUpdate("""
     UPDATE game

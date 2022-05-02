@@ -34,7 +34,7 @@ public interface PlayerDao
         (game, person, cards, uncovered, held_card)
         VALUES
         (:game, :person, :cards, :uncovered, :heldCard)""")
-    void create(@BindMethods PlayerRow playerRow);
+    void insert(@BindMethods PlayerRow playerRow);
 
     @SqlUpdate("""
         UPDATE player
