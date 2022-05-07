@@ -223,6 +223,11 @@ public class Game
         return id;
     }
 
+    public Game withId(Long id)
+    {
+        return new Game(id, deck, tableCards, players, hostId, state, turn, nextPlayerId, isFinalTurn);
+    }
+
     public Deck deck()
     {
         return deck;

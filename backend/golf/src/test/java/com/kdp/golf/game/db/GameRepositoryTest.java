@@ -41,19 +41,12 @@ class GameRepositoryTest
 
         var player = Player.from(user);
         var game = Game.create(null, player);
+        game = gameRepo.create(game);
+        log.info(game.toString());
 
-
-//        var user = new User(idGen.nextId(), "Alice", idGen.nextId());
-//        userDao.create(UserRow.from(user));
-//
-//        var player = Player.from(user);
-//        var game = Game.create(idGen.nextId(), player);
-//        log.info(game.toString());
-//        gameRepo.create(game);
-//
-//        var foundGame = gameRepo.findById(game.id()).orElseThrow();
-//        log.info(foundGame.toString());
-//        assertEquals(game, foundGame);
+        var foundGame = gameRepo.findById(game.id()).orElseThrow();
+        log.info(foundGame.toString());
+        assertEquals(game, foundGame);
     }
 
 //    @Test

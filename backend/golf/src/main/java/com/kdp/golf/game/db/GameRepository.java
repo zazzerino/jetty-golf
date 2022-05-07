@@ -36,26 +36,28 @@ public class GameRepository
         return Optional.of(game);
     }
 
-    public void create(Game g)
+    public Game create(Game game)
     {
-        assert(g.players().size() == 1);
+        assert(game.players().size() == 1);
 
-        var player = g.players().get(0);
-        var playerRow = PlayerRow.from(g.id(), player);
+        var gameRow = GameRow.from(game);
+        var id = gameDao.insert(gameRow);
+
+        var player = game.players().get(0);
+        var playerRow = PlayerRow.from(id, player);
         playerDao.insert(playerRow);
 
-        var gameRow = GameRow.from(g);
-        gameDao.insert(gameRow);
+        return game.withId(id);
     }
 
-    public void update(Game g)
+    public void update(Game game)
     {
-        var gameRow = GameRow.from(g);
+        var gameRow = GameRow.from(game);
         gameDao.update(gameRow);
     }
 
-    public void delete(Game g)
+    public void delete(Game game)
     {
-        gameDao.delete(g.id());
+        gameDao.delete(game.id());
     }
 }
