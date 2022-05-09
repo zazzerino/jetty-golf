@@ -10,19 +10,9 @@ public interface Request
 
     enum Type
     {
-        CREATE_USER,
         UPDATE_NAME,
         CREATE_GAME,
         START_GAME,
-    }
-
-    record CreateUser(Long sessionId) implements Request
-    {
-        @Override
-        public Type type()
-        {
-            return Type.CREATE_USER;
-        }
     }
 
     record UpdateName(Long sessionId, String name) implements Request

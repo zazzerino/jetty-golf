@@ -10,7 +10,7 @@ public class Lib
      */
     public static <T> Optional<Integer> findIndex(List<T> list, T elem)
     {
-        var index = list.indexOf(elem);
+        int index = list.indexOf(elem);
         return index == -1
                 ? Optional.empty()
                 : Optional.of(index);

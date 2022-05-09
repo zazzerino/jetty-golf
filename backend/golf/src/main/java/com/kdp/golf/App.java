@@ -1,5 +1,6 @@
 package com.kdp.golf;
 
+import com.kdp.golf.game.GameController;
 import com.kdp.golf.game.GameService;
 import com.kdp.golf.game.db.GameRepository;
 import com.kdp.golf.user.UserController;
@@ -24,12 +25,13 @@ public class App
         var userService = new UserService(dbConnection);
         var userController = new UserController(userService);
 
-//        var gameRepository = new GameRepository(dbConnection);
-//        var gameService = new GameService(userService, gameRepository);
+        var gameRepository = new GameRepository(dbConnection);
+        var gameService = new GameService(gameRepository);
+        var gameController = new GameController(userService, gameService);
 
         // create jetty server
         var server = new Server(PORT);
-        var servlet = new SocketServlet(userController);
+        var servlet = new SocketServlet(userController, gameController);
 
         // create jetty handler
         var handler = new ServletContextHandler(server, "/");

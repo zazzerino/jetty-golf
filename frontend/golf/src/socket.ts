@@ -1,4 +1,4 @@
-import {Action, Request, Response, UpdateNameRequest, UserResponse} from "./types";
+import {Action, CreateGameRequest, GameResponse, Request, Response, UpdateNameRequest, UserResponse} from "./types";
 import {Dispatch} from "react";
 
 const WS_URL = "ws://localhost:8080/ws";
@@ -13,17 +13,28 @@ export function makeSocket(): WebSocket {
 
 export function handleMessage(dispatch: Dispatch<Action>, event: MessageEvent) {
   console.log("message received ↓");
-  console.log(event.data);
+  // console.log(event.data);
 
-  const resp = JSON.parse(event.data) as Response;
-  switch (resp.type) {
-    case "USER": return handleUserResponse(dispatch, resp as UserResponse);
+  const response = JSON.parse(event.data) as Response;
+  console.log(response);
+
+  switch (response.type) {
+    case "USER": return handleUserResponse(dispatch, response as UserResponse);
+    case "GAME": return handleGameResponse(dispatch, response as GameResponse);
   }
 }
 
 function handleUserResponse(dispatch: Dispatch<Action>, response: UserResponse) {
   const user = response.user;
   const action: Action = {type: "SET_USER", user};
+
+  dispatch(action);
+}
+
+function handleGameResponse(dispatch: Dispatch<Action>, response: GameResponse) {
+  const game = response.game;
+  const action: Action = {type: "SET_GAME", game};
+
   dispatch(action);
 }
 
@@ -33,6 +44,11 @@ export function sendUpdateName(socket: WebSocket, name: string) {
     name,
   }
 
+  send(socket, request);
+}
+
+export function sendCreateGame(socket: WebSocket) {
+  const request: CreateGameRequest = {type: "CREATE_GAME"};
   send(socket, request);
 }
 

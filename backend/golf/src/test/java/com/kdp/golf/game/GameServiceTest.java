@@ -26,20 +26,20 @@ class GameServiceTest
         dbConn = new DatabaseConnection();
         dbConn.runSchema();
         userService = new UserService(dbConn);
-        gameService = new GameService(userService, new GameRepository(dbConn));
+        gameService = new GameService(new GameRepository(dbConn));
     }
 
     @Test
     void createGame()
     {
-//        var userId = idGen.nextId();
+//        var playerId = idGen.nextId();
 //        var sessionId = idGen.nextId();
-//        var user = new User(userId, "Bob", sessionId);
+//        var user = new User(playerId, "Bob", sessionId);
 //        userService.createUser(sessionId);
 //
 //        var player = Player.from(user);
-//        var gameId = idGen.nextId();
-//        var game = Game.create(gameId, player);
+//        var id = idGen.nextId();
+//        var game = Game.create(id, player);
 //        log.info(game.toString());
     }
 }

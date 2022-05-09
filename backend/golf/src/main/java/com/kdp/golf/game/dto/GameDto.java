@@ -5,50 +5,55 @@ import com.kdp.golf.game.model.GameState;
 import com.kdp.golf.game.model.card.Card;
 import com.kdp.golf.game.model.card.CardLocation;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
-public record GameDto(Long userId,
-                      Long gameId,
-                      Collection<Card> tableCards,
-                      Collection<PlayerDto> players,
+/**
+ * A Game data-transfer-object. Represents the game data that will be sent to a player.
+ */
+public record GameDto(Long id,
+                      Long playerId,
+                      List<String> tableCards,
+                      List<PlayerDto> players,
                       Long hostId,
                       GameState state,
                       int turn,
-                      boolean finalTurn,
                       Long nextPlayerId,
                       boolean isFinalTurn,
-                      Collection<CardLocation> playableCards)
+                      List<CardLocation> playableCards)
 {
-    public static GameDto from(Game g, Long userId)
-    {
-        var player = g.getPlayer(userId).orElseThrow();
-        var playableCards = g.playableCards(player);
+    public static GameDto from(Game game, Long userId) {
+        var tableCards = game.tableCards()
+                .stream()
+                .map(Card::name)
+                .toList();
 
-//        var playerCount = g.players().size();
-//        var positions = HandPosition.positions(playerCount);
-//        var playerOrder = g.playerOrderFrom(userId);
-//        var playerDtos = new ArrayList<PlayerDto>();
-//
-//        for (var i = 0; i < playerCount; i++) {
-//            var gameId = playerOrder.get(i);
-//            var player = g.getPlayer(gameId).orElseThrow();
-//            var handPos = positions.get(i);
-//            var dto = PlayerDto.from(player, handPos);
-//            playerDtos.add(dto);
-//        }
+        var playerCount = game.players().size();
+        var handPositions = HandPosition.positions(playerCount);
+        var playerOrder = game.playerOrderFrom(userId);
+        var playerDtos = new ArrayList<PlayerDto>(playerCount);
 
-//        return new GameDto(
-//                g.gameId(),
-//                userId,
-//                g.hostId(),
-//                g.state(),
-//                g.turn(),
-//                g.isFinalTurn(),
-//                g.playerTurn(),
-//                g.tableCards(),
-//                playableCards,
-//                playerDtos
-//        );
-        return null;
+        for (var i = 0; i < playerCount; i++) {
+            var pid = playerOrder.get(i);
+            var player = game.getPlayer(pid).orElseThrow();
+            var handPos = handPositions.get(i);
+            var playerDto = PlayerDto.from(player, handPos);
+            playerDtos.add(playerDto);
+        }
+
+        var player = game.getPlayer(userId).orElseThrow();
+        var playableCards = game.playableCards(player);
+
+        return new GameDto(
+                game.id(),
+                userId,
+                tableCards,
+                playerDtos,
+                game.hostId(),
+                game.state(),
+                game.turn(),
+                game.nextPlayerId(),
+                game.isFinalTurn(),
+                playableCards);
     }
 }

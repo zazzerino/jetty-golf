@@ -1,12 +1,14 @@
 import {Link} from 'react-router-dom';
 import {User} from '../types';
 
-function UserInfo(props: {id: number, name: string}) {
+function UserInfo(props: {user: User}) {
+  const {id, name} = props.user;
+
   return (
     <p className="UserInfo">
       Logged in as
-      <span className="user-name"> {props.name}</span>
-      <span className="user-id">(id={props.id})</span>
+      <span className="user-name"> {name}</span>
+      <span className="user-id">(id={id})</span>
     </p>
   );
 }
@@ -26,7 +28,12 @@ export function Navbar(props: {user: User}) {
           User
         </Link>
       </li>
-      {user && <UserInfo id={user.id} name={user.name} />}
+      <li>
+        <Link to="/game">
+          Game
+        </Link>
+      </li>
+      {user && <UserInfo user={user} />}
     </ul>
   );
 }

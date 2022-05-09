@@ -16,8 +16,10 @@ public class Deck
         this.cards = cards;
     }
 
-    public static Deck create(int deckCount) {
+    public static Deck create(int deckCount)
+    {
         assert deckCount > 0;
+
         var cardList = enumerateCards();
         var cards = new ArrayDeque<>(cardList);
 

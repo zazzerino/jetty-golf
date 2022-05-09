@@ -15,5 +15,6 @@ export const INITIAL_STATE: AppState = {
 export function rootReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case "SET_USER": return {...state, user: action.user};
+    case "SET_GAME": return {...state, game: action.game};
   }
 }

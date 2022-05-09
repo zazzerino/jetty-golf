@@ -52,12 +52,34 @@ public class GameRepository
 
     public void update(Game game)
     {
+        var gameId = game.id();
         var gameRow = GameRow.from(game);
         gameDao.update(gameRow);
+
+        var existingPlayerIds = playerDao.findPlayers(gameId)
+                .stream()
+                .map(PlayerRow::person)
+                .toList();
+
+        for (var player : game.players()) {
+            var playerRow = PlayerRow.from(gameId, player);
+            var playerExists = existingPlayerIds.contains(player.id());
+
+            if (playerExists) {
+                playerDao.update(playerRow);
+            } else {
+                playerDao.insert(playerRow);
+            }
+        }
     }
 
     public void delete(Game game)
     {
+        for (var player : game.players()) {
+            playerDao.findById(player.id())
+                    .ifPresent(playerRow -> playerDao.delete(player.id()));
+        }
+
         gameDao.delete(game.id());
     }
 }

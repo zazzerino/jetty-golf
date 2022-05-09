@@ -19,10 +19,10 @@ public class GameController
         this.gameService = gameService;
     }
 
-    public Response.Game createGame(Request.CreateGame req)
+    public Response.Game createGame(Request.CreateGame request)
     {
-        var user = userService.findBySessionId(req.sessionId()).orElseThrow();
-        var game = gameService.createGame(user.id());
+        var user = userService.findBySessionId(request.sessionId()).orElseThrow();
+        var game = gameService.createGame(user);
         var gameDto = GameDto.from(game, user.id());
         return new Response.Game(gameDto);
     }

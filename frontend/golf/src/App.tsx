@@ -7,6 +7,7 @@ import {HomePage} from "./components/HomePage";
 import {UserPage} from "./components/user/UserPage";
 import {SocketContext} from "./SocketProvider";
 import {handleMessage} from "./socket";
+import {GamePage} from "./components/game/GamePage";
 
 export default function App() {
   const [state, dispatch] = useReducer(rootReducer, INITIAL_STATE);
@@ -22,13 +23,14 @@ export default function App() {
 
   return (
     <div className="App">
-        <BrowserRouter>
-          <Navbar user={user} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/user" element={<UserPage />} />
-          </Routes>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Navbar user={user} />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/user" element={<UserPage />} />
+          <Route path="/game" element={<GamePage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

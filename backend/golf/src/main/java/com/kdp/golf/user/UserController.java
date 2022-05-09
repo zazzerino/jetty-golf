@@ -18,9 +18,9 @@ public final class UserController
         this.userService = userService;
     }
 
-    public Response.User createUser(Request.CreateUser req)
+    public Response.User createUser(Long sessionId)
     {
-        var user = userService.createUser(req.sessionId());
+        var user = userService.createUser(sessionId);
         log.info("user created: " + user);
         var userDto = UserDto.from(user);
         return new Response.User(userDto);

@@ -28,32 +28,32 @@ public record GameRow(Long id,
                       Long nextPlayer,
                       boolean finalTurn)
 {
-    public static GameRow from(Game g) {
-        var deck = g.deck().cards()
+    public static GameRow from(Game game) {
+        var deck = game.deck().cards()
                 .stream()
                 .map(Card::name)
                 .toList();
 
-        var tableCards = g.tableCards()
+        var tableCards = game.tableCards()
                 .stream()
                 .map(Card::name)
                 .toList();
 
-        var players = g.players()
+        var players = game.players()
                 .stream()
                 .map(Player::id)
                 .toList();
 
         return new GameRow(
-                g.id(),
+                game.id(),
                 deck,
                 tableCards,
                 players,
-                g.hostId(),
-                g.state().toString(),
-                g.turn(),
-                g.nextPlayerId(),
-                g.isFinalTurn());
+                game.hostId(),
+                game.state().toString(),
+                game.turn(),
+                game.nextPlayerId(),
+                game.isFinalTurn());
     }
 
     public Game toGame(List<Player> players) {

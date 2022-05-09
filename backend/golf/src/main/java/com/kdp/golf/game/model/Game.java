@@ -58,24 +58,24 @@ public class Game
         this.isFinalTurn = isFinalTurn;
     }
 
-    public void addPlayer(Player p)
+    public void addPlayer(Player player)
     {
         if (players.size() >= MAX_PLAYERS) {
             throw new IllegalStateException("can't add more than MAX_PLAYERS");
         }
 
-        players.add(p);
+        players.add(player);
     }
 
-    public void removePlayer(Player p)
+    public void removePlayer(Player player)
     {
-        players.remove(p);
+        players.remove(player);
 
-        if (hostId.equals(p.id())) {
+        if (hostId.equals(player.id())) {
             hostId = players.stream().findFirst().orElseThrow().id();
         }
 
-        if (nextPlayerId.equals(p.id())) {
+        if (nextPlayerId.equals(player.id())) {
             nextPlayer();
         }
     }
@@ -128,35 +128,35 @@ public class Game
         }
     }
 
-    private void uncover(Player p, int handIndex)
+    private void uncover(Player player, int handIndex)
     {
-        p.uncoverCard(handIndex);
+        player.uncoverCard(handIndex);
         state = GameState.TAKE;
         ++turn;
         nextPlayer();
     }
 
-    private void takeFromDeck(Player p)
+    private void takeFromDeck(Player player)
     {
         var card = deck.deal().orElseThrow();
-        p.holdCard(card);
+        player.holdCard(card);
         state = GameState.DISCARD;
     }
 
-    private void takeFromTable(Player p)
+    private void takeFromTable(Player player)
     {
         // TODO: handle an empty stack
         var card = tableCards.pop();
-        p.holdCard(card);
+        player.holdCard(card);
         state = GameState.DISCARD;
     }
 
-    private void discard(Player p)
+    private void discard(Player player)
     {
-        var card = p.discard();
+        var card = player.discard();
         tableCards.push(card);
 
-        var hasOneCoveredCard = p.uncoveredCardCount() == Hand.HAND_SIZE - 1;
+        var hasOneCoveredCard = player.uncoveredCardCount() == Hand.HAND_SIZE - 1;
         if (hasOneCoveredCard) {
             state = GameState.TAKE;
             ++turn;
@@ -165,19 +165,19 @@ public class Game
         }
     }
 
-    private void swapCard(Player p, int handIndex)
+    private void swapCard(Player player, int handIndex)
     {
-        var card = p.swapCard(handIndex);
+        var card = player.swapCard(handIndex);
         tableCards.push(card);
         ++turn;
         nextPlayer();
     }
 
-    private boolean playerCanAct(Player p)
+    private boolean playerCanAct(Player player)
     {
-        var isPlayersTurn = nextPlayerId.equals(p.id());
+        var isPlayersTurn = nextPlayerId.equals(player.id());
         // When the state is UNCOVER_TWO any player can act as long as they have fewer than 2 cards uncovered
-        var isUncoverTwo = state == GameState.UNCOVER_TWO && p.stillUncoveringTwo();
+        var isUncoverTwo = state == GameState.UNCOVER_TWO && player.stillUncoveringTwo();
         return isPlayersTurn || isUncoverTwo;
     }
 
@@ -295,7 +295,7 @@ public class Game
     public String toString()
     {
         return "Game{" +
-                "gameId=" + id +
+                "id=" + id +
                 ", deck=" + deck +
                 ", tableCards=" + tableCards +
                 ", players=" + players +

@@ -34,24 +34,13 @@ public class UserService
                 .map(UserRow::id);
     }
 
-    public Optional<String> findName(Long userId)
-    {
-        return userDao.findById(userId)
-                .map(UserRow::name);
-    }
-
-    public Optional<Long> findSessionId(Long userId)
-    {
-        return userDao.findById(userId)
-                .map(UserRow::session);
-    }
-
     @Transaction
     public User createUser(Long sessionId)
     {
         var name = User.DEFAULT_NAME;
         var userRow = new UserRow(null, name, sessionId);
         var id = userDao.insert(userRow);
+
         return new User(id, name, sessionId);
     }
 

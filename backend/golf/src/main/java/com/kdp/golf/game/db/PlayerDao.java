@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * An interface for doing crud with PlayerRow objects.
+ * A PlayerRow data-access-object for doing crud with PlayerRow objects.
  */
 public interface PlayerDao
 {
@@ -24,9 +24,7 @@ public interface PlayerDao
     @RegisterRowMapper(PlayerRow.Mapper.class)
     List<PlayerRow> findPlayers(Long gameId);
 
-    @SqlQuery("""
-    SELECT p.name FROM person p
-    WHERE p.id = ?""")
+    @SqlQuery("SELECT p.name FROM person p WHERE p.id = ?")
     Optional<String> findName(Long playerId);
 
     @SqlUpdate("""
