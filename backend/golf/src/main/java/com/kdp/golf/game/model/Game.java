@@ -106,6 +106,28 @@ public class Game
 
     public void handleEvent(GameEvent event)
     {
+        var player = getPlayer(event.playerId()).orElseThrow();
+        if (!playerCanAct(player)) return;
+
+        switch (state) {
+            case UNCOVER_TWO -> {
+                if (event instanceof GameEvent.Uncover e) {
+                    uncoverTwo(player, e.handIndex());
+                }
+            }
+            case UNCOVER -> {
+                if (event instanceof GameEvent.Uncover e) {
+                    uncover(player, e.handIndex());
+                }
+            }
+            case TAKE -> {
+                if (event instanceof GameEvent.TakeFromDeck) {
+                    takeFromDeck(player);
+                } else if (event instanceof GameEvent.TakeFromTable) {
+                    takeFromTable(player);
+                }
+            }
+        }
     }
 
     public Optional<Player> getPlayer(Long playerId)
@@ -115,10 +137,10 @@ public class Game
                 .findFirst();
     }
 
-    private void uncoverTwo(Player p, int handIndex)
+    private void uncoverTwo(Player player, int handIndex)
     {
-        if (p.stillUncoveringTwo()) {
-            p.uncoverCard(handIndex);
+        if (player.stillUncoveringTwo()) {
+            player.uncoverCard(handIndex);
         } else return;
 
         var allReady = players.stream().noneMatch(Player::stillUncoveringTwo);
@@ -157,6 +179,7 @@ public class Game
         tableCards.push(card);
 
         var hasOneCoveredCard = player.uncoveredCardCount() == Hand.HAND_SIZE - 1;
+
         if (hasOneCoveredCard) {
             state = GameState.TAKE;
             ++turn;
@@ -206,9 +229,9 @@ public class Game
     /**
      * @return the card locations that `player` can interact with
      */
-    public List<CardLocation> playableCards(Player p)
+    public List<CardLocation> playableCards(Player player)
     {
-        if (!playerCanAct(p)) return Collections.emptyList();
+        if (!playerCanAct(player)) return Collections.emptyList();
 
         return switch (state) {
             case UNCOVER_TWO, UNCOVER -> CardLocation.UNCOVER_LOCATIONS;

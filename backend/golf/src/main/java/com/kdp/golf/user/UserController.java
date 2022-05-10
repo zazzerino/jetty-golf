@@ -26,9 +26,9 @@ public final class UserController
         return new Response.User(userDto);
     }
 
-    public Response.User updateName(Request.UpdateName req)
+    public Response.User updateName(Request.UpdateName request)
     {
-        var user = userService.updateName(req.sessionId(), req.name());
+        var user = userService.updateName(request.sessionId(), request.name());
         log.info("user updated: " + user);
         var userDto = UserDto.from(user);
         return new Response.User(userDto);

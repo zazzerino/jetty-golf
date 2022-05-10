@@ -11,7 +11,8 @@ import {GamePage} from "./components/game/GamePage";
 
 export default function App() {
   const [state, dispatch] = useReducer(rootReducer, INITIAL_STATE);
-  const user = state.user;
+  // const user = state.user;
+  const {user, game} = state;
   const socket = useContext(SocketContext);
 
   // setup websocket message handler
@@ -21,6 +22,8 @@ export default function App() {
     }
   }, [socket]);
 
+  const gamePageElem = <GamePage userId={user.id} game={game} />
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -28,7 +31,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/user" element={<UserPage />} />
-          <Route path="/game" element={<GamePage />} />
+          <Route path="/game" element={gamePageElem} />
         </Routes>
       </BrowserRouter>
     </div>
