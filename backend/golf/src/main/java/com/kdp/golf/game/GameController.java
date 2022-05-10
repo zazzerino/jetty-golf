@@ -4,14 +4,11 @@ import com.kdp.golf.game.dto.GameDto;
 import com.kdp.golf.user.UserService;
 import com.kdp.golf.websocket.Request;
 import com.kdp.golf.websocket.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GameController
 {
     private final UserService userService;
     private final GameService gameService;
-    private final Logger log = LoggerFactory.getLogger(GameController.class);
 
     public GameController(UserService userService, GameService gameService)
     {
@@ -23,6 +20,14 @@ public class GameController
     {
         var user = userService.findBySessionId(request.sessionId()).orElseThrow();
         var game = gameService.createGame(user);
+        var gameDto = GameDto.from(game, user.id());
+        return new Response.Game(gameDto);
+    }
+
+    public Response.Game startGame(Request.StartGame request)
+    {
+        var user = userService.findBySessionId(request.sessionId()).orElseThrow();
+        var game = gameService.startGame(request.gameId(), user.id());
         var gameDto = GameDto.from(game, user.id());
         return new Response.Game(gameDto);
     }

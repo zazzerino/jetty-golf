@@ -60,6 +60,7 @@ public class Socket implements WebSocketListener
         var response = switch (request) {
             case Request.UpdateName r -> userController.updateName(r);
             case Request.CreateGame r -> gameController.createGame(r);
+            case Request.StartGame r -> gameController.startGame(r);
             default -> throw new IllegalStateException("unexpected value: " + request);
         };
 
@@ -96,7 +97,11 @@ public class Socket implements WebSocketListener
                     yield new Request.UpdateName(sessionId, name);
                 }
                 case CREATE_GAME -> new Request.CreateGame(sessionId);
-                case START_GAME -> null;
+                case START_GAME -> {
+                    var gameId = jsonNode.get("gameId").asLong();
+                    yield new Request.StartGame(sessionId, gameId);
+                }
+                default -> throw new IllegalStateException("unexpected value: " + requestType);
             };
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

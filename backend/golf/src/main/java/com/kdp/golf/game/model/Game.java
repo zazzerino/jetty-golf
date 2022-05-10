@@ -143,8 +143,10 @@ public class Game
             player.uncoverCard(handIndex);
         } else return;
 
-        var allReady = players.stream().noneMatch(Player::stillUncoveringTwo);
-        if (allReady) {
+        var allPlayersReady = players.stream()
+                .noneMatch(Player::stillUncoveringTwo);
+
+        if (allPlayersReady) {
             state = GameState.TAKE;
             ++turn;
         }

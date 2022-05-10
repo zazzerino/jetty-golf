@@ -1,11 +1,5 @@
 import {Card, CARD_WIDTH} from "./Card";
-import {GameState, Point} from "../../types";
-
-function deckPoint(state: GameState): Point {
-  const x = state === "INIT" ? 0 : (-CARD_WIDTH / 2) - 2;
-  const y = 0;
-  return {x, y};
-}
+import {GameState} from "../../types";
 
 interface DeckProps {
   state: GameState;
@@ -14,7 +8,8 @@ interface DeckProps {
 
 export function Deck(props: DeckProps) {
   const {state} = props;
-  const {x, y} = deckPoint(state);
+  const x = state === "INIT" ? 0 : (-CARD_WIDTH / 2) - 2;
+  const y = 0;
 
   return (
     <Card

@@ -56,7 +56,7 @@ export type Action =
   | {type: "SET_GAME", game: Game}
   ;
 
-export type RequestType = "UPDATE_NAME" | "CREATE_GAME";
+export type RequestType = "UPDATE_NAME" | "CREATE_GAME" | "START_GAME";
 
 export interface Request {
   type: RequestType;
@@ -69,6 +69,11 @@ export interface UpdateNameRequest extends Request {
 
 export interface CreateGameRequest extends Request {
   type: "CREATE_GAME";
+}
+
+export interface StartGameRequest extends Request {
+  type: "START_GAME";
+  gameId: number;
 }
 
 export type ResponseType = "USER" | "GAME";

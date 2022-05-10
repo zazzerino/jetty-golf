@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useReducer} from 'react';
-import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Navbar} from "./components/Navbar";
 import {INITIAL_STATE, rootReducer} from "./reducer";
@@ -11,7 +10,6 @@ import {GamePage} from "./components/game/GamePage";
 
 export default function App() {
   const [state, dispatch] = useReducer(rootReducer, INITIAL_STATE);
-  // const user = state.user;
   const {user, game} = state;
   const socket = useContext(SocketContext);
 

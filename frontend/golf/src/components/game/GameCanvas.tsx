@@ -2,7 +2,7 @@ import {Game} from "../../types";
 import {Deck} from "./Deck";
 
 export function GameCanvas(props: {userId: number; game: Game}) {
-  const {userId, game} = props;
+  const {game} = props;
 
   const width = 600;
   const height = 500;
@@ -15,7 +15,7 @@ export function GameCanvas(props: {userId: number; game: Game}) {
       height={height}
       viewBox={viewBox}
     >
-      <Deck state="INIT" playerTurn={0} />
+      <Deck state="INIT" playerTurn={game.nextPlayerId} />
     </svg>
   );
 }

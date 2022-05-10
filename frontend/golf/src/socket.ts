@@ -1,13 +1,24 @@
-import {Action, CreateGameRequest, GameResponse, Request, Response, UpdateNameRequest, UserResponse} from "./types";
+import {
+  Action,
+  CreateGameRequest,
+  GameResponse,
+  Request,
+  Response,
+  StartGameRequest,
+  UpdateNameRequest,
+  UserResponse
+} from "./types";
 import {Dispatch} from "react";
 
 const WS_URL = "ws://localhost:8080/ws";
 
 export function makeSocket(): WebSocket {
   const socket = new WebSocket(WS_URL);
+
   socket.onopen = () => console.log("websocket connection opened");
   socket.onclose = () => console.log("websocket connection closed");
   socket.onerror = ev => console.error("websocket error: " + JSON.stringify(ev));
+
   return socket;
 }
 
@@ -47,6 +58,15 @@ export function sendUpdateName(socket: WebSocket, name: string) {
 
 export function sendCreateGame(socket: WebSocket) {
   const request: CreateGameRequest = {type: "CREATE_GAME"};
+  send(socket, request);
+}
+
+export function sendStartGame(socket: WebSocket, gameId: number) {
+  const request: StartGameRequest = {
+    type: "START_GAME",
+    gameId,
+  };
+
   send(socket, request);
 }
 

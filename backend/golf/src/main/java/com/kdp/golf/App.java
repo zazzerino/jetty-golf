@@ -25,8 +25,7 @@ public class App
         var userService = new UserService(dbConnection);
         var userController = new UserController(userService);
 
-        var gameRepository = new GameRepository(dbConnection);
-        var gameService = new GameService(gameRepository);
+        var gameService = new GameService(new GameRepository(dbConnection));
         var gameController = new GameController(userService, gameService);
 
         // create jetty server
@@ -37,9 +36,9 @@ public class App
         var handler = new ServletContextHandler(server, "/");
         handler.addServlet(new ServletHolder(servlet),"/ws");
         JettyWebSocketServletContainerInitializer.configure(handler, null);
-        server.setHandler(handler);
 
         // start server and wait for connections
+        server.setHandler(handler);
         server.start();
         server.join();
     }

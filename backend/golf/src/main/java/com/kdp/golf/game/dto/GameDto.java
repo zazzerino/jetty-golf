@@ -1,10 +1,13 @@
 package com.kdp.golf.game.dto;
 
+import com.google.common.collect.Lists;
+import com.kdp.golf.game.model.Deck;
 import com.kdp.golf.game.model.Game;
 import com.kdp.golf.game.model.GameState;
 import com.kdp.golf.game.model.card.Card;
 import com.kdp.golf.game.model.card.CardLocation;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 

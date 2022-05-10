@@ -13,6 +13,7 @@ public interface Request
         UPDATE_NAME,
         CREATE_GAME,
         START_GAME,
+        UNCOVER_EVENT,
     }
 
     record UpdateName(Long sessionId, String name) implements Request
@@ -39,6 +40,15 @@ public interface Request
         public Type type()
         {
             return Type.START_GAME;
+        }
+    }
+
+    record UncoverEvent(Long sessionId, Long gameId, int handIndex) implements Request
+    {
+        @Override
+        public Type type()
+        {
+            return Type.UNCOVER_EVENT;
         }
     }
 }

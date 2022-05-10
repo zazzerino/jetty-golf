@@ -1,10 +1,12 @@
 package com.kdp.golf.game.db;
 
+import com.google.common.collect.Lists;
 import com.kdp.golf.game.model.Deck;
 import com.kdp.golf.game.model.Game;
 import com.kdp.golf.game.model.GameState;
 import com.kdp.golf.game.model.Player;
 import com.kdp.golf.game.model.card.Card;
+import com.kdp.golf.user.User;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -12,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

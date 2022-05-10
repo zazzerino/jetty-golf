@@ -41,13 +41,13 @@ public class GameRepository
         assert(game.players().size() == 1);
 
         var gameRow = GameRow.from(game);
-        var id = gameDao.insert(gameRow);
+        var gameId = gameDao.insert(gameRow);
 
         var player = game.players().get(0);
-        var playerRow = PlayerRow.from(id, player);
+        var playerRow = PlayerRow.from(gameId, player);
         playerDao.insert(playerRow);
 
-        return game.withId(id);
+        return game.withId(gameId);
     }
 
     public void update(Game game)
@@ -77,7 +77,7 @@ public class GameRepository
     {
         for (var player : game.players()) {
             playerDao.findById(player.id())
-                    .ifPresent(playerRow -> playerDao.delete(player.id()));
+                    .ifPresent(row -> playerDao.delete(row.person()));
         }
 
         gameDao.delete(game.id());
